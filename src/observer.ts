@@ -1,9 +1,9 @@
 import {
-  Listener,
+  AfterSetEvent,
+  BeforeSetEvent,
   ObserverDatabase,
   Identifiable,
-  BeforeSetEvent,
-  AfterSetEvent,
+  Listener,
 } from "./types";
 
 function createObserver<EventType>(): {
@@ -58,5 +58,6 @@ export default function createObserverDatabase<T extends Identifiable>() {
       return this.afterAddListeners.subscribe(listener);
     }
   }
+
   return InMemoryDatabase;
 }
