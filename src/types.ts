@@ -21,6 +21,20 @@ export interface ObserverDatabase<T extends Identifiable> {
   onAfterAdd(listener: Listener<AfterSetEvent<T>>): () => void;
 }
 
+export interface VisitorDatabase<T extends Identifiable> {
+  set(newValue: T): void;
+  get(id: string): T | undefined;
+
+  visit(visitor: (item: T) => void): void;
+}
+
+export interface StrategyDatabase<T extends Identifiable> {
+  set(newValue: T): void;
+  get(id: string): T | undefined;
+
+  select(scoreStrategy: (item: T) => number): T | undefined;
+}
+
 export type Listener<EventType> = (e: EventType) => void;
 
 export interface AfterSetEvent<T> {

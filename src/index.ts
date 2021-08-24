@@ -2,8 +2,9 @@ import { Person, Identifiable, Database } from "./types";
 import createFactoryDatabase from "./factory";
 import createSingletonDatabase from "./singleton";
 import createObserverDatabase from "./observer";
+import createVisitorDatabase from "./visitor";
 
-// factory pattern
+// FACTORY
 const PeopleFactoryDb = createFactoryDatabase<Person>();
 const peopleFactoryDb = new PeopleFactoryDb();
 
@@ -15,7 +16,8 @@ peopleFactoryDb.set({
 
 // console.log(peopleFactoryDb.get("1"));
 
-// singleton
+// SINGLETON
+
 const PeopleSingletonDb = createSingletonDatabase<Person>();
 
 PeopleSingletonDb.instance.set({
@@ -26,13 +28,11 @@ PeopleSingletonDb.instance.set({
 
 // console.log(PeopleSingletonDb.instance.get("2"));
 
-// observer
+// OBSERVER
 const PeopleObserverDb = createObserverDatabase<Person>();
 
-PeopleObserverDb.instance.onAfterAdd(({ value }) => {
-  console.log(
-    `added person :  id : ${value.id}. name : ${value.name}. job : ${value.job}.`
-  );
+const unsubscribe = PeopleObserverDb.instance.onAfterAdd(({ value }) => {
+  // console.log(value);
 });
 
 PeopleObserverDb.instance.set({
@@ -40,3 +40,35 @@ PeopleObserverDb.instance.set({
   name: "bob observer",
   job: "bobber",
 });
+
+PeopleObserverDb.instance.set({
+  id: "4",
+  name: "jim",
+  job: "jimmer",
+});
+
+unsubscribe();
+
+PeopleObserverDb.instance.set({
+  id: "4",
+  name: "jim",
+  job: "jimmer",
+});
+
+// VISITOR
+
+const PeopleVisitorDb = createVisitorDatabase<Person>();
+
+PeopleVisitorDb.instance.set({
+  id: "1",
+  name: "bob singleton",
+  job: "bobber",
+});
+
+PeopleVisitorDb.instance.set({
+  id: "2",
+  name: "jim",
+  job: "jimmer",
+});
+
+PeopleVisitorDb.instance.visit((item) => console.log(item.name));
